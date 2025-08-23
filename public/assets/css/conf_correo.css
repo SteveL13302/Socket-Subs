@@ -1,74 +1,109 @@
-/* Estilos generales para el contenedor de la fila de "Enviar a grupos" */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px; /* Espacio entre los elementos */
-    margin-bottom: 15px;
+/* ===== VARIABLES CORPORATIVAS ===== */
+:root {
+  --primary-color: #c0392b;   /* rojo principal */
+  --primary-dark: #922b21;   /* rojo oscuro */
+  --primary-light: #fbeaea;  /* rojo claro */
 }
 
-/* Estilo del label */
+/* ===== TABLA CONTACTOS ===== */
+#tablaContactos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#tablaContactos th {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+#tablaContactos td {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+#tablaContactos tbody tr {
+  transition: background 0.2s ease;
+}
+
+#tablaContactos tbody tr:hover {
+  background: var(--primary-light);
+}
+
+/* ===== CABECERA PERSONALIZADA ===== */
+.bg-corporativo {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+.table-corporativo {
+  background-color: var(--primary-light) !important;
+  color: #2c3e50 !important;
+}
+
+/* ===== FORMULARIO ===== */
 .form-label {
-    font-weight: bold;
-    margin-bottom: 10px; /* Espacio entre el label y los productos seleccionados */
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--primary-dark);
 }
 
-/* Contenedor de los productos seleccionados (aparecen horizontalmente) */
-.selected-products {
-    display: flex;
-    align-items: center;
-    gap: 10px;  /* Espacio entre cada producto seleccionado */
-    flex-wrap: wrap;  /* Para que los elementos no se desborden */
+.form-control,
+.form-input {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-/* Estilo para cada producto seleccionado */
-.selected-product {
-    background-color: #f1f1f1;
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.form-control:focus,
+.form-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 6px rgba(192, 57, 43, 0.3);
 }
 
-/* Estilo para el botón de eliminación (x) */
-.remove-btn {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 2px 5px;
-    border-radius: 50%;
-    cursor: pointer;
+/* ===== CHECKBOX ===== */
+.form-check-label {
+  font-size: 14px;
+  color: #444;
+}
+
+/* ===== BOTON PRINCIPAL ===== */
+.btn-primary,
+.form-button {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover,
+.form-button:hover {
+  background: linear-gradient(135deg, var(--primary-dark), #641e16);
+  transform: translateY(-2px);
+}
+
+/* ===== CHECKBOX / OPCIONES ===== */
+.checkbox-section {
+  background: #f9fbff;
+  border: 1px solid #e3e9f5;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+/* ===== RESPONSIVIDAD ===== */
+@media (max-width: 991px) {
+  .main-container .card-body {
+    padding: 1rem;
+  }
+  #tablaContactos {
     font-size: 12px;
-    line-height: 1;
-}
-
-.remove-btn:hover {
-    background-color: #d32f2f;
-}
-
-/* Estilo para el select desplegable */
-select.form-input {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    min-width: 200px; /* Asegura que el select no sea demasiado pequeño */
-    margin-top: 10px; /* Separación entre los productos seleccionados y el select */
-}
-
-/* Estilo para el contenedor de checkbox y su label por ID */
-#checkboxSection {
-    display: flex;
-    align-items: center; /* Alinea verticalmente los elementos al centro */
-    gap: 10px; /* Espacio entre el checkbox y el label */
-}
-
-/* Eliminar márgenes adicionales para el checkbox */
-#checkboxSection .form-checkbox {
-    margin: 0; 
-}
-
-/* Ajustar el tamaño del texto del label */
-#checkboxSection .form-checkbox-label {
-    font-size: 14px; /* Puedes ajustar el tamaño del texto si lo necesitas */
+  }
 }

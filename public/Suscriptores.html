@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suscriptores</title>
+
+    <!-- CSS propios -->
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/conf_correo.css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container my-4">
+        <!-- CARD GENERAL -->
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- Columna Izquierda -->
+                    <div class="col-12 col-lg-8">
+                        <div class="text-center mb-4">
+                            <img class="img-fluid" src="https://socket-studioec.com/img/logo/logo2.png"
+                                alt="Logo socket studio" style="max-height:80px;">
+                            <p class="mt-2 fw-bold">Gestión de suscriptores y envío de mensajes</p>
+                        </div>
+
+                        <!-- Lista de contactos -->
+                        <div id="contactos-section" class="card shadow-sm">
+                            <div class="card-header bg-corporativo text-white text-center fw-bold">
+                                Lista de Contactos
+
+                                <button class="btn btn-success mt-2"
+                                    onclick="window.open('http://localhost:3002/api/exportar/excel_contactos')">
+                                    Descargar Excel
+                                </button>
+                            </div>
+
+
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table id="tablaContactos"
+                                        class="table table-striped table-hover mb-0 align-middle">
+                                        <thead class="table-corporativo text-center">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Cédula</th>
+                                                <th>Nombre y Apellido</th>
+                                                <th>Teléfono</th>
+                                                <th>Correo</th>
+                                                <th>Ciudad</th>
+                                                <th>Dirección</th>
+                                                <th>Activo</th>
+                                                <th>Página</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Aquí se insertan dinámicamente los contactos -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha -->
+                    <div class="col-12 col-lg-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <!-- Canales de envío -->
+                                <div class="mb-4 text-center">
+                                    <label class="form-label fw-bold">Selecciona un canal de envío</label>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="enviarPorCorreo" name="enviarPorCorreo"
+                                                class="form-check-input">
+                                            <label for="enviarPorCorreo" class="form-check-label">Correo</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" id="enviarPorWhatsApp" name="enviarPorWhatsApp"
+                                                class="form-check-input">
+                                            <label for="enviarPorWhatsApp" class="form-check-label">WhatsApp</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Formulario -->
+                                <form id="emailForm" class="form-container">
+                                    <div class="form-group section-correo mb-3">
+                                        <label for="emailSubject" class="form-label">Título del correo</label>
+                                        <input type="text" id="emailSubject" name="emailSubject" class="form-control"
+                                            placeholder="Escribe el título del correo">
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="productGroup" class="form-label">Enviar a grupos</label>
+                                        <div id="selectedProducts" class="selected-products mb-2"></div>
+                                        <select id="productGroup" name="productGroup[]" class="form-control"></select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="sendTime" class="form-label">Fecha y hora de envío</label>
+                                        <input type="datetime-local" id="sendTime" name="sendTime" class="form-control"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group section-correo mb-3">
+                                        <label for="templateType" class="form-label">Plantilla de correo</label>
+                                        <select id="templateType" name="templateType" class="form-control">
+                                            <option value="comunicado">Comunicado</option>
+                                            <option value="promo">Promoción</option>
+                                            <option value="newsletter">Newsletter</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group section-correo mb-3">
+                                        <label for="emailTitle" class="form-label">Título del mensaje</label>
+                                        <input type="text" id="emailTitle" name="emailTitle" class="form-control"
+                                            placeholder="Escribe el título del mensaje">
+                                    </div>
+
+                                    <div class="form-group section-mixto mb-3">
+                                        <label for="emailMessage" class="form-label">Mensaje</label>
+                                        <textarea id="emailMessage" name="emailMessage" class="form-control" rows="5"
+                                            placeholder="Escribe el mensaje" required></textarea>
+                                    </div>
+
+                                    <!-- Opciones extra -->
+                                    <div class="form-group checkbox-section section-mixto mb-3" id="checkboxSection">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="enableButton" name="enableButton"
+                                                        class="form-check-input">
+                                                    <label for="enableButton" class="form-check-label">Incluir
+                                                        botón</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="enableFile" name="enableFile"
+                                                        class="form-check-input">
+                                                    <label for="enableFile" class="form-check-label">Incluir archivo
+                                                        adjunto <span class="text-primary fw-bold">(solo
+                                                            correo)</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="enableImage" name="enableImage"
+                                                        class="form-check-input">
+                                                    <label for="enableImage" class="form-check-label">Incluir
+                                                        Imagen</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Secciones dinámicas -->
+                                    <div id="buttonSection" class="section-mixto mb-3" style="display: none;">
+                                        <div class="mb-2">
+                                            <label for="buttonText" class="form-label">Texto del botón</label>
+                                            <input type="text" id="buttonText" name="buttonText" class="form-control">
+                                        </div>
+                                        <div>
+                                            <label for="buttonLink" class="form-label">Enlace del botón</label>
+                                            <input type="url" id="buttonLink" name="buttonLink" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div id="fileSection" class="section-correo mb-3" style="display: none;">
+                                        <label for="file" class="form-label">Seleccionar archivo</label>
+                                        <input type="file" id="file" name="file" class="form-control"
+                                            accept="application/pdf, .docx, .xlsx">
+                                    </div>
+
+                                    <div id="imageSection" class="section-mixto mb-3" style="display: none;">
+                                        <label for="image" class="form-label">Seleccionar imagen</label>
+                                        <input type="file" id="image" name="image" class="form-control"
+                                            accept="image/*">
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary w-100">Enviar Correo</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const productGroupSelect = document.getElementById('productGroup');
+            const selectedProductsDiv = document.getElementById('selectedProducts');
+            const emailForm = document.getElementById('emailForm');
+            let selectedProducts = [];
+
+            console.log('Esperando productos...');
+
+            fetch('http://localhost:3002/api/productos')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Productos recibidos:', data);
+                    if (data.success) {
+                        productGroupSelect.innerHTML = '<option value="">Selecciona un grupo</option>';
+                        data.productos.forEach(producto => {
+                            console.log('Producto:', producto.nombre);
+                            const option = document.createElement('option');
+                            option.value = producto.id;
+                            option.textContent = producto.nombre;
+                            productGroupSelect.appendChild(option);
+                        });
+                    } else {
+                        console.error('Error al cargar productos:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al hacer la solicitud de productos:', error);
+                });
+
+            productGroupSelect.addEventListener('change', function () {
+                const selectedOption = productGroupSelect.options[productGroupSelect.selectedIndex];
+                console.log('Opción seleccionada:', selectedOption.textContent);
+
+                if (selectedOption.value && !selectedProducts.some(p => p.id === selectedOption.value)) {
+                    console.log('Producto agregado:', selectedOption.textContent);
+                    selectedProducts.push({ id: selectedOption.value, name: selectedOption.textContent });
+                    updateSelectedProducts();
+                    productGroupSelect.selectedIndex = 0;
+                    productGroupSelect.blur();
+                }
+            });
+
+            function updateSelectedProducts() {
+                console.log('Actualizando productos seleccionados...');
+                selectedProductsDiv.innerHTML = '';
+                selectedProducts.forEach(product => {
+                    console.log('Producto en la lista:', product.name);
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('selected-product');
+                    productDiv.innerHTML = `
+                <span>${product.name}</span>
+                <button type="button" class="remove-btn" data-id="${product.id}">x</button>
+            `;
+                    selectedProductsDiv.appendChild(productDiv);
+                });
+
+                const removeButtons = document.querySelectorAll('.remove-btn');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function (e) {
+                        const productId = e.target.dataset.id;
+                        console.log('Eliminando producto con ID:', productId);
+                        selectedProducts = selectedProducts.filter(p => p.id !== productId);
+                        updateSelectedProducts();
+                    });
+                });
+            }
+
+            // Mostrar/ocultar los campos de archivo
+            const enableFileCheckbox = document.getElementById('enableFile');
+            const fileSection = document.getElementById('fileSection');
+            const fileInput = document.getElementById('file');
+
+            enableFileCheckbox.addEventListener('change', function () {
+                console.log('Estado de checkbox de archivo:', enableFileCheckbox.checked);
+                if (enableFileCheckbox.checked) {
+                    fileSection.style.display = 'block';
+                } else {
+                    fileSection.style.display = 'none';
+                    fileInput.value = '';  // Limpiar el archivo si el checkbox se desmarca
+                    console.log('Archivo desmarcado, limpiando input');
+                }
+            });
+
+            // Mostrar/ocultar los campos de botón
+            const enableButtonCheckbox = document.getElementById('enableButton');
+            const buttonSection = document.getElementById('buttonSection');
+            const buttonText = document.getElementById('buttonText');
+            const buttonLink = document.getElementById('buttonLink');
+
+            enableButtonCheckbox.addEventListener('change', function () {
+                console.log('Estado de checkbox de botón:', enableButtonCheckbox.checked);
+                if (enableButtonCheckbox.checked) {
+                    buttonSection.style.display = 'block'; // Muestra la sección del botón
+                    buttonText.required = true; // Requerir texto del botón
+                    buttonLink.required = true; // Requerir enlace del botón
+                    console.log('Sección del botón habilitada');
+                } else {
+                    buttonSection.style.display = 'none'; // Oculta la sección del botón
+                    buttonText.required = false; // No requerir texto
+                    buttonLink.required = false; // No requerir enlace
+                    // Limpiar los campos cuando el checkbox esté desmarcado
+                    buttonText.value = '';
+                    buttonLink.value = '';
+                    console.log('Sección del botón deshabilitada y campos limpiados');
+                }
+            });
+
+            // Mostrar/ocultar los campos de imagen
+            const enableImageCheckbox = document.getElementById('enableImage');
+            const imageSection = document.getElementById('imageSection');
+            const imageInput = document.getElementById('image');
+
+            enableImageCheckbox.addEventListener('change', function () {
+                console.log('Estado de checkbox de imagen:', enableImageCheckbox.checked);
+                if (enableImageCheckbox.checked) {
+                    imageSection.style.display = 'block';  // Muestra la sección para cargar la imagen
+                } else {
+                    imageSection.style.display = 'none';   // Oculta la sección si no está marcado
+                    imageInput.value = '';  // Limpiar la imagen si el checkbox se desmarca
+                    console.log('Imagen desmarcada, limpiando input');
+                }
+            });
+
+            // Evento para el envío del formulario
+            emailForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                console.log('Formulario enviado');
+
+                if (selectedProducts.length === 0) {
+                    alert('Por favor selecciona al menos un producto');
+                    console.log('No se seleccionaron productos');
+                    return;
+                }
+
+                // Validación de fecha y hora
+                const sendTimeInput = document.getElementById('sendTime').value;
+                const sendTime = new Date(sendTimeInput);
+                const now = new Date();
+
+                if (sendTime <= now) {
+                    alert('La fecha y hora de envío debe ser posterior a la hora actual.');
+                    console.warn('Fecha de envío inválida:', sendTimeInput);
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('emailSubject', document.getElementById('emailSubject').value);
+
+                // Enviar los productos seleccionados como un array de IDs
+                formData.append('productGroup', JSON.stringify(selectedProducts.map(p => p.id)));
+
+                formData.append('sendTime', document.getElementById('sendTime').value);
+                formData.append('templateType', document.getElementById('templateType').value);
+                formData.append('emailTitle', document.getElementById('emailTitle').value);
+                formData.append('emailMessage', document.getElementById('emailMessage').value);
+
+                formData.append('enviar_por_correo', document.getElementById('enviarPorCorreo').checked);
+                formData.append('enviar_por_whatsapp', document.getElementById('enviarPorWhatsApp').checked);
+
+
+                // Añadir los campos condicionales si están habilitados
+                formData.append('enableButton', document.getElementById('enableButton').checked);
+                if (enableButtonCheckbox.checked) {
+                    formData.append('buttonText', buttonText.value);
+                    formData.append('buttonLink', buttonLink.value);
+                }
+
+                // Añadir el valor del checkbox 'enableFile'
+                formData.append('enableFile', document.getElementById('enableFile').checked);
+
+                // Si se habilitó la carga de archivo, adjuntar el archivo
+                if (enableFileCheckbox.checked && fileInput.files.length > 0) {
+                    console.log('Archivo adjunto detectado');
+                    formData.append('file', fileInput.files[0]);
+                }
+
+                // Añadir el valor del checkbox 'enableImage'
+                formData.append('enableImage', document.getElementById('enableImage').checked);
+
+                // Si se habilitó la carga de imagen, adjuntar la imagen
+                if (enableImageCheckbox.checked && imageInput.files.length > 0) {
+                    console.log('Imagen adjunta detectada');
+                    formData.append('image', imageInput.files[0]);  // Adjuntamos la imagen seleccionada
+                }
+
+                // Mostrar los datos que se están enviando
+                formData.forEach((value, key) => {
+                    console.log(key, value);
+                });
+
+                // Enviar el formulario al backend como FormData
+                fetch('http://localhost:3002/api/enviar_correos', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Correo enviado correctamente');
+                            console.log('Correo enviado con éxito:', data);
+                        } else {
+                            alert('Hubo un error al enviar el correo');
+                            console.error('Error al enviar el correo:', data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al enviar el correo:', error);
+                    });
+            });
+
+
+            // ==================== Cargar Contactos ====================
+            fetch('http://localhost:3002/api/suscripcion/contactos')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const tbody = document.querySelector('#tablaContactos tbody');
+                        tbody.innerHTML = '';
+
+                        data.contactos.forEach(contacto => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                    <td>${contacto.id}</td>
+                    <td>${contacto.cedula ?? ''}</td>
+                    <td>${contacto.nombre_apellido}</td>
+                    <td>${contacto.telefono ?? ''}</td>
+                    <td>${contacto.correo ?? ''}</td>
+                    <td>${contacto.ciudad ?? ''}</td>
+                    <td>${contacto.direccion ?? ''}</td>
+                    <td>${contacto.activo ? 'Sí' : 'No'}</td>
+                    <td>${contacto.pagina ?? ''}</td>
+                `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        console.error('No se pudieron cargar contactos:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener contactos:', error);
+                });
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkCorreo = document.getElementById('enviarPorCorreo');
+            const checkWhatsApp = document.getElementById('enviarPorWhatsApp');
+
+            const enableFileCheckbox = document.getElementById('enableFile');
+            const fileSection = document.getElementById('fileSection');
+            const fileInput = document.getElementById('file');
+
+            const enableButtonCheckbox = document.getElementById('enableButton');
+            const buttonSection = document.getElementById('buttonSection');
+            const buttonText = document.getElementById('buttonText');
+            const buttonLink = document.getElementById('buttonLink');
+
+            const enableImageCheckbox = document.getElementById('enableImage');
+            const imageSection = document.getElementById('imageSection');
+            const imageInput = document.getElementById('image');
+
+            function updateVisibility() {
+                const showCorreo = checkCorreo.checked;
+                const showWhatsApp = checkWhatsApp.checked;
+
+                document.querySelectorAll('.section-correo').forEach(el => {
+                    el.style.display = showCorreo ? 'block' : 'none';
+                    if (!showCorreo) clearFields(el);
+                });
+
+                document.querySelectorAll('.section-mixto').forEach(el => {
+                    const visible = showCorreo || showWhatsApp;
+                    el.style.display = visible ? 'block' : 'none';
+                    if (!visible) clearFields(el);
+                });
+
+                // Mostrar u ocultar sección archivo
+                if (showCorreo && enableFileCheckbox.checked) {
+                    fileSection.style.display = 'block';
+                } else {
+                    fileSection.style.display = 'none';
+                    fileInput.value = '';
+                }
+
+                // Mostrar u ocultar sección imagen
+                if ((showCorreo || showWhatsApp) && enableImageCheckbox.checked) {
+                    imageSection.style.display = 'block';
+                } else {
+                    imageSection.style.display = 'none';
+                    imageInput.value = '';
+                }
+
+                // Mostrar u ocultar sección botón
+                if (enableButtonCheckbox.checked) {
+                    buttonSection.style.display = 'block';
+                    buttonText.required = true;
+
+                    // Lógica para el enlace del botón
+                    if (showWhatsApp && !showCorreo) {
+                        // Solo WhatsApp → ocultar enlace
+                        buttonLink.required = false;
+                        buttonLink.parentElement.style.display = 'none';
+                    } else {
+                        // Correo activado → mostrar enlace
+                        buttonLink.required = true;
+                        buttonLink.parentElement.style.display = 'block';
+                    }
+                } else {
+                    buttonSection.style.display = 'none';
+                    buttonText.required = false;
+                    buttonLink.required = false;
+                    buttonText.value = '';
+                    buttonLink.value = '';
+                }
+
+                // Si solo WhatsApp está activo, no permitir imagen + botón juntos
+                if (showWhatsApp && !showCorreo) {
+                    if (enableButtonCheckbox.checked && enableImageCheckbox.checked) {
+                        alert("Para WhatsApp solo puedes incluir botón o imagen, no ambos. Se desmarcará la imagen.");
+                        enableImageCheckbox.checked = false;
+                        imageSection.style.display = 'none';
+                        imageInput.value = '';
+                    }
+                }
+            }
+
+            function clearFields(section) {
+                const inputs = section.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        input.checked = false;
+                    } else {
+                        input.value = '';
+                    }
+                });
+            }
+
+            checkCorreo.addEventListener('change', updateVisibility);
+            checkWhatsApp.addEventListener('change', updateVisibility);
+            enableButtonCheckbox.addEventListener('change', updateVisibility);
+            enableImageCheckbox.addEventListener('change', updateVisibility);
+            enableFileCheckbox.addEventListener('change', updateVisibility);
+
+            updateVisibility();
+        });
+    </script>
+
+</body>
+
+</html>

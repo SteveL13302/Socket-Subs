@@ -14,3 +14,22 @@ CREATE TABLE contactos (
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación (por defecto es la fecha actual)
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Fecha de última actualización
 );
+
+CREATE TABLE envios_correo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    asunto VARCHAR(255) NOT NULL,
+    fecha_envio DATETIME NOT NULL,
+    titulo_mensaje VARCHAR(255) NOT NULL,
+    mensaje TEXT NOT NULL,
+    habilitar_boton BOOLEAN DEFAULT FALSE,
+    texto_boton VARCHAR(255),
+    enlace_boton VARCHAR(255),
+    habilitar_archivo BOOLEAN DEFAULT FALSE,
+    ruta_archivo VARCHAR(255),
+    habilitar_imagen BOOLEAN DEFAULT FALSE,
+    ruta_imagen VARCHAR(255),
+    enviar_por_correo BOOLEAN DEFAULT TRUE,
+    enviar_por_whatsapp BOOLEAN DEFAULT FALSE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

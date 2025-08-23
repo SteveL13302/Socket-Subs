@@ -1,5 +1,8 @@
 import express, { Application } from 'express';
+
 import ValidacionRoutes from '../routes/suscripcion';
+import ExportarRoutes from "../routes/exportar";
+
 import cors from 'cors';
 import fs from 'fs';
 import https from 'https';
@@ -12,7 +15,8 @@ class Server {
     private app: Application;
     private port: string;
     private paths = {
-        suscipcion: '/api/suscripcion'
+        suscipcion: '/api/suscripcion',
+        exportar: "/api/exportar"
     }
 
     constructor() {
@@ -74,24 +78,25 @@ class Server {
     routes() {
         // Ahora pasamos la carga de archivo en la ruta de enviar correos
         this.app.use(this.paths.suscipcion, ValidacionRoutes);
+        this.app.use(this.paths.exportar, ExportarRoutes); 
               
     }
 
     listen() {
         // Desarrollo
-        // this.app.listen(this.port, () => {
-        //     console.log('Servidor corriendo en puerto ' + this.port);
-        // });
+        this.app.listen(this.port, () => {
+            console.log('Servidor corriendo en puerto ' + this.port);
+        });
 
         // Producción (opcional)
-        const options = {
-            key: fs.readFileSync('/etc/private/key/server_orel.key'),
-            cert: fs.readFileSync('/etc/private/key/begroupec_tech_com.crt')
-        };
+        // const options = {
+        //     key: fs.readFileSync('/etc/private/key/server_orel.key'),
+        //     cert: fs.readFileSync('/etc/private/key/begroupec_tech_com.crt')
+        // };
 
-        https.createServer(options, this.app).listen(this.port, () => {
-            console.log('Servidor corriendo en puerto ' + this.port + ' usando HTTPS');
-        });
+        // https.createServer(options, this.app).listen(this.port, () => {
+        //     console.log('Servidor corriendo en puerto ' + this.port + ' usando HTTPS');
+        // });
     }
 }
 
