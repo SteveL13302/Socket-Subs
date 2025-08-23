@@ -1,0 +1,12 @@
+https://begroupec-tech.com:1917
+
+https://begroupec-tech.com:1917
+
+Formulario con checkbox de productos (0): No envia correos si hay duplicados para evitar conflicto entre los multiples productos agregados. Aunque se registre por primera vez no envia correo
+
+Formulario suscripcion (1): Al registrarse además del correo de bienvenida envía el modelo de capacitacion, si hay duplicado (telef) no permite enviar
+
+fs_p1 (2): Permite registrarse a usuarios nuevos o simplemente agregar el curso que envia por defecto (4 - Se cambia en el script del front donde recibe los productos). Además del de bienvenida se envía el correo del modeloProducto1. En caso de duplicados (Telef) le dice que ya fue registrado
+
+fs_p1 (2): Permite registrarse a usuarios nuevos o simplemente agregar el curso que envia por defecto (4 - Se cambia en el script del front donde recibe los productos). En caso de duplicados (Telef) le dice que ya fue registrado
+

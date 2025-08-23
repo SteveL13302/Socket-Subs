@@ -1,0 +1,74 @@
+/* Estilos generales para el contenedor de la fila de "Enviar a grupos" */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* Espacio entre los elementos */
+    margin-bottom: 15px;
+}
+
+/* Estilo del label */
+.form-label {
+    font-weight: bold;
+    margin-bottom: 10px; /* Espacio entre el label y los productos seleccionados */
+}
+
+/* Contenedor de los productos seleccionados (aparecen horizontalmente) */
+.selected-products {
+    display: flex;
+    align-items: center;
+    gap: 10px;  /* Espacio entre cada producto seleccionado */
+    flex-wrap: wrap;  /* Para que los elementos no se desborden */
+}
+
+/* Estilo para cada producto seleccionado */
+.selected-product {
+    background-color: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Estilo para el botón de eliminación (x) */
+.remove-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 2px 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.remove-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Estilo para el select desplegable */
+select.form-input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    min-width: 200px; /* Asegura que el select no sea demasiado pequeño */
+    margin-top: 10px; /* Separación entre los productos seleccionados y el select */
+}
+
+/* Estilo para el contenedor de checkbox y su label por ID */
+#checkboxSection {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos al centro */
+    gap: 10px; /* Espacio entre el checkbox y el label */
+}
+
+/* Eliminar márgenes adicionales para el checkbox */
+#checkboxSection .form-checkbox {
+    margin: 0; 
+}
+
+/* Ajustar el tamaño del texto del label */
+#checkboxSection .form-checkbox-label {
+    font-size: 14px; /* Puedes ajustar el tamaño del texto si lo necesitas */
+}

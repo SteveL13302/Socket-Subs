@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Begroup</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap JS (requiere Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+
+    <style>
+        .alert {
+            transition: opacity 0.5s ease-in-out;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-input:invalid {
+            border-color: #dc3545;
+        }
+
+        .form-input:valid {
+            border-color: #28a745;
+        }
+
+        .form-input {
+            transition: border-color 0.3s ease;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+            padding: 15px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body class="body-container">
+
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <!-- Logo centrado -->
+            <div class="logo">
+                <img class="logo-img"
+                    src="https://zgtorq.stripocdn.email/content/guids/CABINET_6311feda1ed93a6330127d443045cb8bbfa0e8a0d3fb2b57b8cbe8c154cc3bbf/images/logos_be_group_6_bGT.png"
+                    alt>
+                <p class="logo-text">BIENVENIDO A BE GROUP</p>
+            </div>
+        </div>
+
+        <!-- Mensaje de bienvenida a Be Group -->
+        <div class="welcome-message">
+            <div class="form-container">
+                <h2 class="form-title" style="text-align: center;">¡Suscríbete a Be Group!</h2>
+                <p class="form-subtitle" style="text-align: center;">Completa el formulario para estar al tanto de todas
+                    nuestras novedades.</p>
+
+                <form id="form" class="form" onsubmit="return validateForm(event)">
+                    <div id="alert-container" class="alert"
+                        style="margin-bottom: 10px; margin-top: 10px; border-radius: 10px;"></div>
+
+                    <input type="hidden" id="form_id" name="form_id" value="4">
+
+                    <div class="form-group">
+                        <label for="cedula" class="form-label">Cédula</label>
+                        <div class="input-group">
+                            <input type="text" id="cedula" name="cedula" required class="form-input form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre_apellido" class="form-label">Nombre y Apellido</label>
+                        <input type="text" id="nombre_apellido" name="nombre_apellido" required
+                            class="form-input form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <div class="input-group">
+                            <input type="text" id="telefono" name="telefono" required class="form-input form-control">
+                            <button class="btn btn-outline-secondary" type="button"
+                                onclick="buscarContacto('telefono')">🔍</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo" class="form-label">Correo Electrónico</label>
+                        <input type="email" id="correo" name="correo" required class="form-input form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" required class="form-input form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudad" class="form-label">Ciudad</label>
+                        <input type="text" id="ciudad" name="ciudad" required class="form-input form-control">
+                    </div>
+
+                    <br>
+
+                    <div class="form-group">
+                        <label class="form-check-label">
+                            <input type="checkbox" id="terminos" name="terminos" required class="form-check-input">
+                            Acepto los <a
+                                href="https://begroupec.com/demos-landing/Begroupec/Suscripcion/TerminosYCondiciones_BeContactos.pdf"
+                                style="color:#032f6e; font-weight: 500;" target="_blank">términos y condiciones</a> de
+                            acuerdo con la ley de protección de datos personales en Ecuador.
+                        </label>
+                    </div>
+
+                    <br>
+
+                    <div class="form-submit text-center">
+                        <button type="submit" id="submitBtn" class="form-button btn btn-primary">Suscribirse</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+
+        <!-- Redes Sociales -->
+        <div class="social-media">
+            <p class="social-text"><em>Begroup, somos innovación y tecnología.</em><br><strong>CONTACTO: 022762190 -
+                    0982792618<br>¡SÍGUENOS!</strong></p>
+            <div class="social-icons">
+                <!-- Añadir iconos de redes sociales -->
+                <a href="https://www.facebook.com/people/Be-Group/100064120628159/" class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/social-icons/logo-colored-bordered/facebook-logo-colored-bordered.png"
+                        width="32" alt="Facebook">
+                </a>
+                <a href="https://www.youtube.com/@BeGroupSAS" class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/social-icons/logo-colored-bordered/youtube-logo-colored-bordered.png"
+                        width="32" alt="YouTube">
+                </a>
+                <a href="https://www.linkedin.com/feed/update/urn:li:activity:6991794310417391616?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A6991794310417391616%29"
+                    class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/social-icons/logo-colored-bordered/linkedin-logo-colored-bordered.png"
+                        width="32" alt="LinkedIn">
+                </a>
+                <a href="https://www.tiktok.com/@begroupecu?is_from_webapp=1&sender_device=pc" class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/social-icons/logo-colored-bordered/tiktok-logo-colored-bordered.png"
+                        width="32" alt="TikTok">
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=593986069719" class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/messenger-icons/logo-colored-bordered/whatsapp-logo-colored-bordered.png"
+                        width="32" alt="WhatsApp">
+                </a>
+                <a href="https://www.instagram.com/begroupec/" class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/social-icons/logo-colored-bordered/instagram-logo-colored-bordered.png"
+                        width="32" alt="Instagram">
+                </a>
+                <a href="https://www.begroupec.com/" class="social-icon">
+                    <img src="https://zgtorq.stripocdn.email/content/assets/img/other-icons/logo-colored-bordered/link-logo-colored-bordered.png"
+                        width="32" alt="Website">
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Validacion y envio de formulario  -->
+    <script>
+        const form = document.getElementById("form");
+        const alertContainer = document.getElementById("alert-container");
+
+        function showAlert(message, type = 'danger') {
+            alertContainer.textContent = message;
+            alertContainer.classList.add(`alert-${type}`);
+            alertContainer.style.display = "block";
+        }
+
+        function hideAlert() {
+            alertContainer.style.display = "none";
+            alertContainer.classList.remove("alert-danger", "alert-success");
+        }
+
+        function validarNombreApellido(input) {
+            input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+            const nombreApellidoRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+            if (!nombreApellidoRegex.test(input.value)) {
+                showAlert("El nombre y apellido no deben contener caracteres no permitidos.");
+            } else {
+                hideAlert();
+            }
+        }
+
+        function validarTelefono(input) {
+            input.value = input.value.replace(/\D/g, '');
+            if (input.value.startsWith('593')) {
+                if (input.value.length > 12) input.value = input.value.slice(0, 12);
+                if (input.value.length !== 12) {
+                    showAlert("El número debe tener 12 dígitos si empieza con 593.");
+                } else {
+                    hideAlert();
+                }
+            } else {
+                if (input.value.length > 10) input.value = input.value.slice(0, 10);
+                if (input.value.length !== 10) {
+                    showAlert("El número debe tener 10 dígitos.");
+                } else {
+                    hideAlert();
+                }
+            }
+        }
+
+        function validarCorreo(input) {
+            const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!correoRegex.test(input.value)) {
+                showAlert("Por favor ingresa un correo electrónico válido.");
+            } else {
+                hideAlert();
+            }
+        }
+
+        document.querySelectorAll(".form-input").forEach(input => {
+            input.addEventListener("input", function () {
+                if (input.id === "nombre_apellido") {
+                    validarNombreApellido(input);
+                } else if (input.id === "cedula") {
+                    const cedula = input.value.trim();
+                    if (!/^\d{10}$/.test(cedula)) {
+                        showAlert("La cédula debe tener exactamente 10 dígitos numéricos.");
+                    } else {
+                        hideAlert();
+                    }
+                } else if (input.id === "telefono") {
+                    validarTelefono(input);
+                } else if (input.id === "correo") {
+                    validarCorreo(input);
+                } else {
+                    validateField(input);
+                }
+            });
+        });
+
+        function validateField(input) {
+            const errorMessage = checkValidity(input);
+            if (errorMessage) {
+                input.classList.add("is-invalid");
+                input.classList.remove("is-valid");
+                showAlert(errorMessage, 'danger');
+            } else {
+                input.classList.remove("is-invalid");
+                input.classList.add("is-valid");
+                hideAlert();
+            }
+        }
+
+        function checkValidity(input) {
+            if (input.id === "cedula") {
+                const cedula = input.value.trim();
+                if (!/^\d{10}$/.test(cedula)) return "La cédula debe tener exactamente 10 dígitos numéricos.";
+            }
+            if (input.id === "nombre_apellido" && input.value.trim() === "") return "El campo 'Nombre y Apellido' es obligatorio.";
+            if (input.id === "telefono" && !/^\d{10}$/.test(input.value)) return "El campo 'Teléfono' debe tener 10 dígitos numéricos.";
+            if (input.id === "correo" && !/\S+@\S+\.\S+/.test(input.value)) return "El campo 'Correo Electrónico' debe tener un formato válido (ej. ejemplo@dominio.com).";
+            if (input.id === "ciudad" && input.value.trim() === "") return "El campo 'Ciudad' es obligatorio.";
+            return null;
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+
+            const submitButton = document.getElementById("submitBtn");
+            submitButton.disabled = true;
+
+            const terminosCheckbox = document.getElementById("terminos");
+            if (!terminosCheckbox.checked) {
+                showAlert("Debes aceptar los términos y condiciones para suscribirte.");
+                submitButton.disabled = false;
+                return false;
+            }
+
+            const formId = document.getElementById('form_id').value;
+
+            const cedula = document.getElementById('cedula').value.trim();
+            if (!/^\d{10}$/.test(cedula)) {
+                showAlert("La cédula debe tener exactamente 10 dígitos numéricos.");
+                submitButton.disabled = false;
+                return false;
+            }
+
+            const nombreApellido = document.getElementById('nombre_apellido').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const ciudad = document.getElementById('ciudad').value.trim();
+            const direccion = document.getElementById('direccion').value.trim();
+
+            if (!nombreApellido || !telefono || !correo || !ciudad || !direccion) {
+                showAlert("Por favor, completa todos los campos.");
+                submitButton.disabled = false;
+                return false;
+            }
+
+            const formData = {
+                cedula: cedula,
+                nombre_apellido: nombreApellido,
+                telefono: telefono,
+                correo: correo,
+                ciudad: ciudad,
+                direccion: direccion,
+                term_condi: terminosCheckbox.checked,
+                form_id: formId,
+                pagina: "agepro"
+            };
+
+            fetch('http://localhost:3000', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        showAlert(data.message || "Hubo un error al procesar tu suscripción.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al enviar el formulario:", error);
+                    showAlert("Hubo un error al enviar el formulario. Intenta nuevamente.");
+                });
+
+            submitButton.disabled = false;
+            return false;
+        }
+    </script>
+    <!-- Agregar Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+CREATE DATABASE socket_subs;
+
+CREATE TABLE contactos (
+  id SERIAL PRIMARY KEY,
+  cedula VARCHAR(20),
+  nombre_apellido VARCHAR(255) NOT NULL,
+  telefono VARCHAR(20),
+  correo VARCHAR(255),
+  ciudad VARCHAR(100),
+  direccion VARCHAR(255),
+  activo BOOLEAN NOT NULL DEFAULT FALSE,
+  term_condi BOOLEAN NOT NULL DEFAULT FALSE,
+  pagina VARCHAR(100),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha de creación (por defecto es la fecha actual)
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Fecha de última actualización
+);
