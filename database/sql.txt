@@ -33,3 +33,28 @@ CREATE TABLE envios_correo (
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario VARCHAR(50) NOT NULL UNIQUE,
+  pwd VARCHAR(255) NOT NULL,
+  empresa VARCHAR(100) NOT NULL,
+  logo VARCHAR(255) DEFAULT NULL,
+  -- Configuración SMTP
+  user_mail VARCHAR(100) DEFAULT NULL,
+  password_mail VARCHAR(100) DEFAULT NULL,
+  host_mail VARCHAR(100) DEFAULT NULL,
+  port_mail INT DEFAULT NULL,
+  nombre_empresa VARCHAR(100) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO usuarios 
+(usuario, pwd, empresa, logo, user_mail, password_mail, host_mail, port_mail, nombre_empresa)
+VALUES
+('consu_lapo', 'consu_lapo123', 'Consu Lapo', 'https://mislogos.com/consulapo.png',
+ 'facturaelect@misdocumentoselectronicos.com', 'M@rlon2025', 'smtp.hostinger.com', 465, 'SocketStudio'),
+
+('agepro', 'agepro123', 'Agepro S.A.', 'https://mislogos.com/agepro.png',
+ 'facturaelect@misdocumentoselectronicos.com', 'M@rlon2025', 'smtp.hostinger.com', 465, 'SocketStudio');
+

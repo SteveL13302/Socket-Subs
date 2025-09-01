@@ -1,103 +1,111 @@
+// BACKEND: src/models/server.ts
+import 'dotenv/config';
 import express, { Application } from 'express';
 
-import ValidacionRoutes from '../routes/suscripcion';
-import ExportarRoutes from "../routes/exportar";
+import SuscripcionRoutes from '../routes/suscripcion';
+import ExportarRoutes from '../routes/exportar';
+import authRouter from '../routes/auth';
 
 import cors from 'cors';
-import fs from 'fs';
-import https from 'https';
+import cookieParser from 'cookie-parser';
 import database from '../database/connection';
-import multer from 'multer'; // Importamos multer
-import path from 'path'; // Para obtener la extensión de los archivos
+import multer from 'multer';
+import path from 'path';
+// import fs from 'fs';
+// import https from 'https';
 
 class Server {
+  private app: Application;
+  private port: string;
+  private paths = {
+    suscripcion: '/api/suscripcion',
+    exportar: '/api/exportar',
+    auth: '/api/auth',
+  };
 
-    private app: Application;
-    private port: string;
-    private paths = {
-        suscipcion: '/api/suscripcion',
-        exportar: "/api/exportar"
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || '3002';
+
+    this.dbConnection();
+    this.middlewares();
+    this.routes();
+  }
+
+  // Configuración de Multer
+  private upload = multer({
+    storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+        if (file.fieldname === 'image') cb(null, 'public/assets/img');
+        else cb(null, 'public/assets/doc');
+      },
+      filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+      },
+    }),
+  });
+
+  // Conexión a la base de datos
+  async dbConnection() {
+    try {
+      await database.authenticate();
+      console.log('Database online');
+      await database.sync();
+      console.log('Modelos sincronizados');
+    } catch (error: any) {
+      console.error('Error en la conexión a la base de datos:', error);
+      throw new Error(error);
     }
+  }
 
-    constructor() {
-        this.app = express();
-        this.port = process.env.PORT || '8000';
+  middlewares() {
+    const ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:4200';
 
-        // Métodos iniciales
-        this.dbConnection();
-        this.middlewares();
-        this.routes();
-    }
+    // CORS con credenciales + soporte a preflight
+    const corsOpts: cors.CorsOptions = {
+      origin: ORIGIN,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    };
+    this.app.use(cors(corsOpts));
+    this.app.options('*', cors(corsOpts)); // ← Responde preflight OPTIONS
 
-    // Configuración de Multer
-    private upload = multer({
-        storage: multer.diskStorage({
-            // Cambiar el destino para las imágenes a 'public/assets/img'
-            destination: function (req, file, cb) {
-                if (file.fieldname === 'image') {
-                    cb(null, 'public/assets/img'); // Carpeta donde se guardarán las imágenes
-                } else {
-                    cb(null, 'public/assets/doc'); // Para otros archivos (si tienes más)
-                }
-            },
-            filename: function (req, file, cb) {
-                cb(null, Date.now() + path.extname(file.originalname)); // Usar un nombre único para el archivo
-            }
-        })
+    // Cookies httpOnly
+    this.app.use(cookieParser());
+
+    // Parseo de body
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+
+    // Archivos estáticos
+    this.app.use(express.static('public'));
+    this.app.use('/docs', express.static('docs'));
+  }
+
+  routes() {
+    // Rutas de negocio
+    this.app.use(this.paths.suscripcion, SuscripcionRoutes);
+    this.app.use(this.paths.exportar, ExportarRoutes);
+
+    // Rutas de autenticación (login, logout, me)
+    this.app.use(this.paths.auth, authRouter);
+  }
+
+  listen() {
+    this.app.listen(this.port, () => {
+      console.log(`Servidor corriendo en puerto ${this.port}`);
     });
 
-    // Método de conexión a la base de datos
-    async dbConnection() {
-        try {
-            await database.authenticate(); // Verifica si la base de datos es accesible
-            console.log('Database online');
-
-            // Sincroniza los modelos con la base de datos
-            await database.sync();  // Opcionalmente puedes usar `force: true` para eliminar las tablas y recrearlas
-            console.log('Modelos sincronizados');
-        } catch (error: any) {
-            console.error('Error en la conexión a la base de datos:', error);
-            throw new Error(error);
-        }
-    }
-
-    middlewares() {
-        // CORS
-        this.app.use(cors());
-
-        // Lectura de JSON y de datos de formularios
-        this.app.use(express.json()); // Para manejar datos JSON
-        this.app.use(express.urlencoded({ extended: true })); // Para manejar datos de formularios (application/x-www-form-urlencoded)
-
-        // Carpeta pública (agregada para que Multer guarde las imágenes en la carpeta pública)
-        this.app.use(express.static('public'));
-        this.app.use('/docs', express.static('docs'));  // Para que los archivos en docs sean públicos
-
-}
-
-    routes() {
-        // Ahora pasamos la carga de archivo en la ruta de enviar correos
-        this.app.use(this.paths.suscipcion, ValidacionRoutes);
-        this.app.use(this.paths.exportar, ExportarRoutes); 
-              
-    }
-
-    listen() {
-        // Desarrollo
-        this.app.listen(this.port, () => {
-            console.log('Servidor corriendo en puerto ' + this.port);
-        });
-
-        // Producción (opcional)
-        // const options = {
-        //     key: fs.readFileSync('/etc/private/key/server_orel.key'),
-        //     cert: fs.readFileSync('/etc/private/key/begroupec_tech_com.crt')
-        // };
-
-        // https.createServer(options, this.app).listen(this.port, () => {
-        //     console.log('Servidor corriendo en puerto ' + this.port + ' usando HTTPS');
-        // });
-    }
+    // Producción HTTPS (opcional)
+    // const options = {
+    //   key: fs.readFileSync('/etc/private/key/server_orel.key'),
+    //   cert: fs.readFileSync('/etc/private/key/begroupec_tech_com.crt'),
+    // };
+    // https.createServer(options, this.app).listen(this.port, () => {
+    //   console.log('Servidor HTTPS en puerto ' + this.port);
+    // });
+  }
 }
 
 export default Server;
