@@ -44,9 +44,14 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = (_req: Request, res: Response) => {
-  res.clearCookie('auth_token');
-  res.json({ ok: true });
+  res.clearCookie('auth_token', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  return res.json({ ok: true });
 };
+
 
 export const me = async (req: Request, res: Response) => {
   // requiere que antes hayas pasado por un middleware que ponga req.auth
