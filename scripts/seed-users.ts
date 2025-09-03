@@ -17,6 +17,7 @@ import { Usuario } from '../models/usuarios';       // ajusta la ruta si tus mod
     };
 
     const users = [
+      { usuario: 'socket_studio', empresa: 'Socket studio', logo: 'https://socket-studioec.com/img/logo/logo2.png', plain: 'admin' },
       { usuario: 'consu_lapo', empresa: 'Consu Lapo', logo: 'https://mislogos.com/consulapo.png', plain: 'consu_lapo123' },
       { usuario: 'agepro',     empresa: 'Agepro S.A.', logo: 'https://mislogos.com/agepro.png',     plain: 'agepro123' },
     ];

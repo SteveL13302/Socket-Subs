@@ -1,43 +1,43 @@
 import { Request, Response } from 'express';
 import Contacto from '../models/contacto';
 
+const SUPERUSER = (process.env.SUPERUSER ?? 'socket_studio').toLowerCase();
+const isSuperuser = (u?: string) => !!u && u.toLowerCase() === SUPERUSER;
+
 export const obtenerContactos = async (req: Request, res: Response) => {
-    try {
-        console.log("Solicitud para obtener contactos recibida");
+  try {
+    const usuario = (req as any).auth?.usuario as string | undefined;
 
-        // Obtener todos los contactos desde la base de datos
-        const contactos = await Contacto.findAll();
+    // Superusuario ve todo; el resto se filtra por 'pagina = usuario'
+    const where: any = isSuperuser(usuario) ? {} : { pagina: usuario };
 
-        if (!contactos || contactos.length === 0) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "No se encontraron contactos." 
-            });
-        }
+    const contactos = await Contacto.findAll({
+      where,
+      order: [['id', 'ASC']],
+    });
 
-        // Responder con los contactos obtenidos
-        res.status(200).json({
-            success: true,
-            contactos: contactos.map(contacto => ({
-                id: contacto.id,
-                cedula: contacto.cedula,
-                nombre_apellido: contacto.nombre_apellido,
-                telefono: contacto.telefono,
-                correo: contacto.correo,
-                ciudad: contacto.ciudad,
-                direccion: contacto.direccion,
-                activo: contacto.activo,
-                term_condi: contacto.term_condi,
-                pagina: contacto.pagina,
-                createdAt: contacto.createdAt,
-                updatedAt: contacto.updatedAt
-            })),
-        });
-    } catch (error) {
-        console.error("Error al obtener contactos:", error);
-        res.status(500).json({
-            success: false,
-            message: "Hubo un error al obtener los contactos.",
-        });
-    }
+    return res.status(200).json({
+      success: true,
+      contactos: contactos.map(c => ({
+        id: c.id,
+        cedula: c.cedula,
+        nombre_apellido: c.nombre_apellido,
+        telefono: c.telefono,
+        correo: c.correo,
+        ciudad: c.ciudad,
+        direccion: c.direccion,
+        activo: c.activo,
+        term_condi: c.term_condi,
+        pagina: c.pagina,
+        createdAt: c.createdAt,
+        updatedAt: c.updatedAt,
+      })),
+    });
+  } catch (error) {
+    console.error('Error al obtener contactos:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Hubo un error al obtener los contactos.',
+    });
+  }
 };

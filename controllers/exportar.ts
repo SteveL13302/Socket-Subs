@@ -1,11 +1,19 @@
-// controllers/exportar.ts
 import { Request, Response } from "express";
 import Contacto from "../models/contacto";
 import ExcelJS from "exceljs";
 
+const SUPERUSER = (process.env.SUPERUSER ?? 'socket_studio').toLowerCase();
+const isSuperuser = (u?: string) => !!u && u.toLowerCase() === SUPERUSER;
+
 export const exportarContactosExcel = async (req: Request, res: Response) => {
   try {
-    const contactos = await Contacto.findAll();
+    const usuario = (req as any).auth?.usuario as string | undefined;
+    const where: any = isSuperuser(usuario) ? {} : { pagina: usuario };
+
+    const contactos = await Contacto.findAll({
+      where,
+      order: [['id', 'ASC']],
+    });
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Contactos");
@@ -21,17 +29,28 @@ export const exportarContactosExcel = async (req: Request, res: Response) => {
       { header: "Activo", key: "activo", width: 10 },
       { header: "Página", key: "pagina", width: 20 },
     ];
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.autoFilter = { from: 'A1', to: 'I1' };
 
-    contactos.forEach((c: any) => worksheet.addRow(c.toJSON()));
+    contactos.forEach(c =>
+      worksheet.addRow({
+        id: c.id,
+        cedula: c.cedula,
+        nombre_apellido: c.nombre_apellido,
+        telefono: c.telefono,
+        correo: c.correo,
+        ciudad: c.ciudad,
+        direccion: c.direccion,
+        activo: c.activo ? 'Sí' : 'No',
+        pagina: c.pagina,
+      })
+    );
 
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=contactos.xlsx"
-    );
+    res.setHeader("Content-Disposition", "attachment; filename=contactos.xlsx");
 
     await workbook.xlsx.write(res);
     res.end();
