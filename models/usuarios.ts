@@ -34,3 +34,5 @@ Usuario.init(
     timestamps: false,
   }
 );
+
+export default Usuario;

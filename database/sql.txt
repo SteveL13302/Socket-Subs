@@ -58,3 +58,31 @@ VALUES
 ('agepro', 'agepro123', 'Agepro S.A.', 'https://mislogos.com/agepro.png',
  'facturaelect@misdocumentoselectronicos.com', 'M@rlon2025', 'smtp.hostinger.com', 465, 'SocketStudio');
 
+
+CREATE TABLE envios_correo (
+    id INT AUTO_INCREMENT PRIMARY KEY,              -- Identificador único para el envío
+    asunto VARCHAR(255) NOT NULL,                   -- Título del correo
+    fecha_envio DATETIME NOT NULL,                  -- Fecha y hora de envío
+    titulo_mensaje VARCHAR(255) NOT NULL,           -- Título del mensaje
+    mensaje TEXT NOT NULL,                          -- Cuerpo del mensaje
+    habilitar_boton BOOLEAN DEFAULT FALSE,          -- Si se habilita el botón en el correo
+    texto_boton VARCHAR(255),                       -- Texto del botón
+    enlace_boton VARCHAR(255),                      -- Enlace del botón
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha de creación
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Fecha de última actualización
+);
+
+ALTER TABLE envios_correo
+ADD COLUMN habilitar_archivo BOOLEAN DEFAULT FALSE,  -- Si se habilita la opción de cargar archivo
+ADD COLUMN ruta_archivo VARCHAR(255);                -- Ruta donde se guarda el archivo
+
+ALTER TABLE envios_correo
+ADD COLUMN habilitar_imagen BOOLEAN DEFAULT FALSE,  -- Si se habilita la opción de cargar archivo
+ADD COLUMN ruta_imagen VARCHAR(255);                -- Ruta donde se guarda el archivo
+
+ALTER TABLE envios_correo 
+MODIFY COLUMN mensaje TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE envios_correo
+ADD COLUMN enviar_por_correo BOOLEAN DEFAULT TRUE,
+ADD COLUMN enviar_por_whatsapp BOOLEAN DEFAULT FALSE;

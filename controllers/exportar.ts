@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Contacto from "../models/contacto";
 import ExcelJS from "exceljs";
 
-const SUPERUSER = (process.env.SUPERUSER ?? 'socket_studio').toLowerCase();
+const SUPERUSER = (process.env.SUPERUSER ?? "socket_studio").toLowerCase();
 const isSuperuser = (u?: string) => !!u && u.toLowerCase() === SUPERUSER;
 
 export const exportarContactosExcel = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const exportarContactosExcel = async (req: Request, res: Response) => {
 
     const contactos = await Contacto.findAll({
       where,
-      order: [['id', 'ASC']],
+      order: [["id", "ASC"]],
     });
 
     const workbook = new ExcelJS.Workbook();
@@ -27,12 +27,13 @@ export const exportarContactosExcel = async (req: Request, res: Response) => {
       { header: "Ciudad", key: "ciudad", width: 20 },
       { header: "Dirección", key: "direccion", width: 25 },
       { header: "Activo", key: "activo", width: 10 },
+      { header: "Fecha Registro", key: "createdAt", width: 10 },
       { header: "Página", key: "pagina", width: 20 },
     ];
     worksheet.getRow(1).font = { bold: true };
-    worksheet.autoFilter = { from: 'A1', to: 'I1' };
+    worksheet.autoFilter = { from: "A1", to: "I1" };
 
-    contactos.forEach(c =>
+    contactos.forEach((c) =>
       worksheet.addRow({
         id: c.id,
         cedula: c.cedula,
@@ -41,7 +42,10 @@ export const exportarContactosExcel = async (req: Request, res: Response) => {
         correo: c.correo,
         ciudad: c.ciudad,
         direccion: c.direccion,
-        activo: c.activo ? 'Sí' : 'No',
+        activo: c.activo ? "Sí" : "No",
+        createdAt: c.createdAt
+          ? new Date(c.createdAt).toISOString().split("T")[0]
+          : "",
         pagina: c.pagina,
       })
     );

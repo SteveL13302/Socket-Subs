@@ -5,6 +5,7 @@ import express, { Application } from "express";
 import SuscripcionRoutes from "../routes/suscripcion";
 import ExportarRoutes from "../routes/exportar";
 import authRouter from "../routes/auth";
+// import correosRouter from "../routes/correos";
 
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -21,6 +22,7 @@ class Server {
     suscripcion: "/api/suscripcion",
     exportar: "/api/exportar",
     auth: "/api/auth",
+    correos: "/api/correos",
   };
 
   constructor() {
@@ -98,6 +100,9 @@ class Server {
 
     // Rutas de autenticación (login, logout, me)
     this.app.use(this.paths.auth, authRouter);
+
+    // Rutas de correos)
+    // this.app.use(this.paths.correos, correosRouter);
   }
 
   listen() {
