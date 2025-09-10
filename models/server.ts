@@ -5,7 +5,7 @@ import express, { Application } from "express";
 import SuscripcionRoutes from "../routes/suscripcion";
 import ExportarRoutes from "../routes/exportar";
 import authRouter from "../routes/auth";
-// import correosRouter from "../routes/correos";
+import correosRouter from "../routes/correos";
 
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -79,7 +79,7 @@ class Server {
     this.app.use(cors(corsOpts));
     this.app.options("*", cors(corsOpts)); // ← Responde preflight OPTIONS
 
-    this.app.set('trust proxy', 1);
+    this.app.set("trust proxy", 1);
 
     // Cookies httpOnly
     this.app.use(cookieParser());
@@ -101,8 +101,15 @@ class Server {
     // Rutas de autenticación (login, logout, me)
     this.app.use(this.paths.auth, authRouter);
 
-    // Rutas de correos)
-    // this.app.use(this.paths.correos, correosRouter);
+    // Rutas de correos (👈 ahora pasamos multer.fields aquí)
+    this.app.use(
+      this.paths.correos,
+      this.upload.fields([
+        { name: "file", maxCount: 1 },
+        { name: "image", maxCount: 1 },
+      ]),
+      correosRouter
+    );
   }
 
   listen() {

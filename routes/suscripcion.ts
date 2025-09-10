@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { suscribirseConProductos } from '../controllers/suscripcion';
 import { obtenerContactos } from '../controllers/contactos';
 import { verifyJWT } from '../middleware/auth';
-
 const router = Router();
 
 // Usar el middleware primero y luego el controlador

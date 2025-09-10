@@ -1,39 +1,46 @@
-
-import dotenv from 'dotenv';
-
 import nodemailer from 'nodemailer';
 
-dotenv.config(); 
+// Función para enviar correo con credenciales dinámicas
+export const sendEmail = async (
+  smtpConfig: {
+    user_mail: string;
+    host_mail: string;
+    port_mail: number;
+    password_mail: string;
+  },
+  to: string,
+  subject: string,
+  htmlContent: string,
+  attachments?: string
+) => {
+  // Crear un transporter por cada envío (dinámico según el usuario)
+  const transporter = nodemailer.createTransport({
+    host: smtpConfig.host_mail,
+    port: smtpConfig.port_mail,
+    secure: true,
+    auth: {
+      user: smtpConfig.user_mail,
+      pass: smtpConfig.password_mail,
+    },
+  } as nodemailer.TransportOptions);
 
-const { HOST_MAIL, PORT_MAIL, USER_MAIL, PASSWORD_MAIL } = process.env;
-
-const transporter = nodemailer.createTransport({
-  host: HOST_MAIL,  // Host del servidor SMTP
-  port: Number(PORT_MAIL),  // Puerto del servidor SMTP
-  secure: true,      // Usamos true para conexión segura (SSL/TLS)
-  auth: {
-    user: USER_MAIL,  // Correo electrónico desde el archivo .env
-    pass: PASSWORD_MAIL  // Contraseña desde el archivo .env
-  }
-} as nodemailer.TransportOptions);
-
-// Función para enviar el correo
-export const sendEmail = (to:string, subject:string, htmlContent:string, attachments: any) => {
   const mailOptions = {
-    from: USER_MAIL,  // Correo de origen (usamos la variable de entorno)
-    to: to,  // Correo del destinatario
-    subject: subject,  // Asunto del correo
-    html: htmlContent,  // El cuerpo del correo es el contenido HTML
-    attachments: attachments ? [{ path: attachments }] : []  // Adjuntamos el archivo si se pasa
-    // attachments: attachments  // Archivos adjuntos, si hay
+    from: smtpConfig.user_mail, // El correo del usuario que envía
+    to,
+    subject,
+    html: htmlContent,
+    attachments: attachments ? [{ path: attachments }] : [],
   };
 
-  // Enviar el correo
-  transporter.sendMail(mailOptions, (error:any, info:any) => {
-    if (error) {
-      console.log('Error al enviar el correo:', error);
-    } else {
-      console.log('Correo enviado:', info.response);
-    }
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error al enviar el correo:', error);
+        reject(error);
+      } else {
+        console.log('Correo enviado:', info.response);
+        resolve(info);
+      }
+    });
   });
-}
+};
