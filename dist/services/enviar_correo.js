@@ -25,7 +25,7 @@ const sendEmail = (to, subject, htmlContent, attachments) => {
         subject: subject,
         html: htmlContent,
         attachments: attachments ? [{ path: attachments }] : [] // Adjuntamos el archivo si se pasa
-        // attachments: attachments  // Archivos adjuntos, si hay
+        // attachdments: attachments  // Archivos adjuntos, si hay
     };
     // Enviar el correo
     transporter.sendMail(mailOptions, (error, info) => {

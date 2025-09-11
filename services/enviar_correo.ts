@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 // Función para enviar correo con credenciales dinámicas
 export const sendEmail = async (
@@ -12,8 +12,8 @@ export const sendEmail = async (
   subject: string,
   htmlContent: string,
   attachments?: string
-) => {
-  // Crear un transporter por cada envío (dinámico según el usuario)
+): Promise<any> => {
+  // Crear un transporter dinámico según el usuario logueado
   const transporter = nodemailer.createTransport({
     host: smtpConfig.host_mail,
     port: smtpConfig.port_mail,
@@ -22,25 +22,22 @@ export const sendEmail = async (
       user: smtpConfig.user_mail,
       pass: smtpConfig.password_mail,
     },
-  } as nodemailer.TransportOptions);
+  });
 
   const mailOptions = {
-    from: smtpConfig.user_mail, // El correo del usuario que envía
+    from: smtpConfig.user_mail, // remitente
     to,
     subject,
     html: htmlContent,
     attachments: attachments ? [{ path: attachments }] : [],
   };
 
-  return new Promise((resolve, reject) => {
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error al enviar el correo:', error);
-        reject(error);
-      } else {
-        console.log('Correo enviado:', info.response);
-        resolve(info);
-      }
-    });
-  });
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Correo enviado:", info.response);
+    return info;
+  } catch (error) {
+    console.error("Error al enviar el correo:", error);
+    throw error; // 👈 importante: si falla, el controlador lo captura
+  }
 };

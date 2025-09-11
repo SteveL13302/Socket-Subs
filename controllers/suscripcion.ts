@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import Contacto from "../models/contacto";
+import Usuario from "../models/usuarios";
 import { sendEmail } from "../services/enviar_correo";
 import { ModeloBienvenida_Agepro } from "../template/B_agepro";
-import { ModeloBienvenida_Consulapo } from "../template/B_consu_lapo"; // Asegúrate de tener este archivo
+import { ModeloBienvenida_Consulapo } from "../template/B_consu_lapo";
 
 export const suscribirseConProductos = async (req: Request, res: Response) => {
   try {
@@ -21,7 +22,7 @@ export const suscribirseConProductos = async (req: Request, res: Response) => {
     } = req.body;
 
     form_id = Number(form_id);
-    const activo = true; // Asignamos como true para actualización o creación
+    const activo = true;
 
     let contacto = null;
 
@@ -42,7 +43,7 @@ export const suscribirseConProductos = async (req: Request, res: Response) => {
         cedula: cedula || null,
         pagina: pagina || null,
         term_condi,
-        activo // ← se añade aquí también
+        activo
       });
       console.log("Contacto actualizado:", contacto);
     } else {
@@ -60,7 +61,7 @@ export const suscribirseConProductos = async (req: Request, res: Response) => {
       console.log("Nuevo contacto creado:", contacto);
     }
 
-    // Selección dinámica de plantilla y redirección
+    // === Selección dinámica de plantilla y URL ===
     let htmlContent = "";
     let redirectUrl = "";
 
@@ -71,15 +72,39 @@ export const suscribirseConProductos = async (req: Request, res: Response) => {
       htmlContent = ModeloBienvenida_Consulapo();
       redirectUrl = "/Suscripcion/Bienvenida_Consulapo.html";
     } else {
-      htmlContent = ModeloBienvenida_Agepro(); // valor por defecto
+      htmlContent = ModeloBienvenida_Agepro(); // por defecto
       redirectUrl = "/Suscripcion/Bienvenida_Agepro.html";
     }
 
-    // Enviar el correo
-    setTimeout(() => {
-      sendEmail(correo, "Confirmación de suscripción", htmlContent, null);
-      console.log("Correo de confirmación enviado.");
-    }, 15000);
+    // === Obtener configuración SMTP según empresa (pagina) ===
+    const configSMTP = await Usuario.findOne({ where: { usuario: pagina } });
+
+    if (!configSMTP) {
+      return res.status(400).json({
+        success: false,
+        message: `No se encontró configuración SMTP para la empresa: ${pagina}`,
+      });
+    }
+
+    const smtpConfig = {
+      user_mail: configSMTP.user_mail as string,
+      host_mail: configSMTP.host_mail as string,
+      port_mail: Number(configSMTP.port_mail),
+      password_mail: configSMTP.password_mail as string,
+    };
+
+    // === Enviar el correo de bienvenida ===
+    if (correo) {
+      setTimeout(() => {
+        sendEmail(
+          smtpConfig,
+          correo,
+          "Confirmación de suscripción",
+          htmlContent
+        );
+        console.log("Correo de confirmación enviado.");
+      }, 15000);
+    }
 
     return res.status(200).json({
       success: true,
